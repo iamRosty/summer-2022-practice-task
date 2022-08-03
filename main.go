@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -55,10 +56,14 @@ func (t *Train) UnmarshalJSON(data []byte) error {
 }
 
 func main() {
-	//	... запит даних від користувача
-	//result, err := FindTrains(departureStation, arrivalStation, criteria))
-	//	... обробка помилки
-	//	... друк result
+	var departureStation, arrivalStation, criteria string
+
+	fmt.Print("Type the station of departure and press enter: ")
+	fmt.Scan(&departureStation)
+	fmt.Print("Type the station of arrival and press enter: ")
+	fmt.Scan(&arrivalStation)
+	fmt.Print("Use ONE of these keywords:'price': cheaper first, 'arrival-time': first those that arrive earlier, 'departure-time': first those that depart earlier.\nType the criteria for selecting trains that suit you: ")
+	fmt.Scan(&criteria)
 }
 
 func FindTrains(departureStation, arrivalStation, criteria string) (Trains, error) {
