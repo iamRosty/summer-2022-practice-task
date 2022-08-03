@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+const jsonFile string = "./data.json"
+
 type Trains []Train
 
 type Train struct {
