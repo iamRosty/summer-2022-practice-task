@@ -1,3 +1,9 @@
+// Package main implements a utility to search for suitable trains,
+// selected by user criteria: departure/arrival station, departure/arrival time and fare.
+// The data of the trains are in the file data.json
+// Meaning of keyword criteria:'price': cheaper first, 'arrival-time': first those that arrive earlier,
+// 'departure-time': first those that depart earlier.
+
 package main
 
 import (
@@ -95,25 +101,32 @@ func FindTrains(departureStation, arrivalStation, criteria string) (Trains, erro
 	if criteria != "price" && criteria != "arrival-time" && criteria != "departure-time" {
 		return nil, errors.New("unsupported criteria")
 	}
+
 	jsonData := readJson(jsonFile)
+
 	var trainsBase Trains
 	err := json.Unmarshal(jsonData, &trainsBase)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	var selectedTrains Trains
 	for _, v := range trainsBase {
 		if departureStation == strconv.Itoa(v.DepartureStationID) && arrivalStation == strconv.Itoa(v.ArrivalStationID) {
 			selectedTrains = append(selectedTrains, v)
 		}
 	}
+
 	if len(selectedTrains) == 0 {
 		return nil, nil
 	}
+
 	sortTrains(selectedTrains, criteria)
+
 	if len(selectedTrains) < 3 {
 		return selectedTrains, nil
 	}
+
 	return selectedTrains[:3], nil
 }
 
