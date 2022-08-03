@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -114,6 +115,23 @@ func FindTrains(departureStation, arrivalStation, criteria string) (Trains, erro
 		return selectedTrains, nil
 	}
 	return selectedTrains[:3], nil
+}
+
+func sortTrains(t Trains, criteria string) {
+	switch criteria {
+	case "price":
+		sort.SliceStable(t, func(i, j int) bool {
+			return t[i].Price < t[j].Price
+		})
+	case "arrival-time":
+		sort.SliceStable(t, func(i, j int) bool {
+			return t[i].ArrivalTime.Before(t[j].ArrivalTime)
+		})
+	case "departure-time":
+		sort.SliceStable(t, func(i, j int) bool {
+			return t[i].DepartureTime.Before(t[j].DepartureTime)
+		})
+	}
 }
 
 func readJson(s string) []byte {
