@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"time"
 )
 
@@ -64,9 +66,21 @@ func main() {
 	fmt.Scan(&arrivalStation)
 	fmt.Print("Use ONE of these keywords:'price': cheaper first, 'arrival-time': first those that arrive earlier, 'departure-time': first those that depart earlier.\nType the criteria for selecting trains that suit you: ")
 	fmt.Scan(&criteria)
+
 }
 
 func FindTrains(departureStation, arrivalStation, criteria string) (Trains, error) {
 	// ... код
 	return nil, nil // маєте повернути правильні значення
+}
+
+func readJson(s string) []byte {
+	jsonData, err := ioutil.ReadFile(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if !json.Valid(jsonData) {
+		log.Fatal("invalid json!")
+	}
+	return jsonData
 }
