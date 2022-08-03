@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -77,8 +79,41 @@ func main() {
 }
 
 func FindTrains(departureStation, arrivalStation, criteria string) (Trains, error) {
-	// ... код
-	return nil, nil // маєте повернути правильні значення
+	if departureStation == "" {
+		return nil, errors.New("empty departure station")
+	}
+	if intVar, err := strconv.Atoi(departureStation); intVar <= 0 || err != nil {
+		return nil, errors.New("bad departure station input")
+	}
+	if arrivalStation == "" {
+		return nil, errors.New("empty arrival station")
+	}
+	if intVar, err := strconv.Atoi(arrivalStation); intVar <= 0 || err != nil {
+		return nil, errors.New("bad arrival station input")
+	}
+	if criteria != "price" && criteria != "arrival-time" && criteria != "departure-time" {
+		return nil, errors.New("unsupported criteria")
+	}
+	jsonData := readJson(jsonFile)
+	var trainsBase Trains
+	err := json.Unmarshal(jsonData, &trainsBase)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var selectedTrains Trains
+	for _, v := range trainsBase {
+		if departureStation == strconv.Itoa(v.DepartureStationID) && arrivalStation == strconv.Itoa(v.ArrivalStationID) {
+			selectedTrains = append(selectedTrains, v)
+		}
+	}
+	if len(selectedTrains) == 0 {
+		return nil, nil
+	}
+	sortTrains(selectedTrains, criteria)
+	if len(selectedTrains) < 3 {
+		return selectedTrains, nil
+	}
+	return selectedTrains[:3], nil
 }
 
 func readJson(s string) []byte {
