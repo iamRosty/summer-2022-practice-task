@@ -67,6 +67,13 @@ func main() {
 	fmt.Print("Use ONE of these keywords:'price': cheaper first, 'arrival-time': first those that arrive earlier, 'departure-time': first those that depart earlier.\nType the criteria for selecting trains that suit you: ")
 	fmt.Scan(&criteria)
 
+	result, err := FindTrains(departureStation, arrivalStation, criteria)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, v := range result {
+		fmt.Printf("%+v\n", v)
+	}
 }
 
 func FindTrains(departureStation, arrivalStation, criteria string) (Trains, error) {
