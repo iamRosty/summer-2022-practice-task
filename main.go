@@ -18,6 +18,8 @@ import (
 )
 
 const jsonFile string = "./data.json"
+const layout string = "15:04:05"
+const outputQty int = 3
 
 type Trains []Train
 
@@ -45,8 +47,6 @@ func (t *Train) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-
-	layout := "15:04:05"
 
 	arrivalTime, err := time.Parse(layout, target.ArrivalTime)
 	if err != nil {
@@ -91,15 +91,19 @@ func FindTrains(departureStation, arrivalStation, criteria string) (Trains, erro
 	if departureStation == "" {
 		return nil, errors.New("empty departure station")
 	}
+
 	if intVar, err := strconv.Atoi(departureStation); intVar <= 0 || err != nil {
 		return nil, errors.New("bad departure station input")
 	}
+
 	if arrivalStation == "" {
 		return nil, errors.New("empty arrival station")
 	}
+
 	if intVar, err := strconv.Atoi(arrivalStation); intVar <= 0 || err != nil {
 		return nil, errors.New("bad arrival station input")
 	}
+
 	if criteria != "price" && criteria != "arrival-time" && criteria != "departure-time" {
 		return nil, errors.New("unsupported criteria")
 	}
@@ -125,11 +129,11 @@ func FindTrains(departureStation, arrivalStation, criteria string) (Trains, erro
 
 	sortTrains(selectedTrains, criteria)
 
-	if len(selectedTrains) < 3 {
+	if len(selectedTrains) < outputQty {
 		return selectedTrains, nil
 	}
 
-	return selectedTrains[:3], nil
+	return selectedTrains[:outputQty], nil
 }
 
 func sortTrains(t Trains, criteria string) {
@@ -149,8 +153,8 @@ func sortTrains(t Trains, criteria string) {
 	}
 }
 
-func readJson(s string) []byte {
-	jsonData, err := ioutil.ReadFile(s)
+func readJson(jsonFile string) []byte {
+	jsonData, err := ioutil.ReadFile(jsonFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -158,3 +162,4 @@ func readJson(s string) []byte {
 		log.Fatal("invalid json!")
 	}
 	return jsonData
+}
