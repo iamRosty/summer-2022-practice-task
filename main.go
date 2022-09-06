@@ -47,6 +47,7 @@ func (t *Train) UnmarshalJSON(data []byte) error {
 	}
 
 	layout := "15:04:05"
+
 	arrivalTime, err := time.Parse(layout, target.ArrivalTime)
 	if err != nil {
 		return err
@@ -67,6 +68,7 @@ func (t *Train) UnmarshalJSON(data []byte) error {
 }
 
 func main() {
+
 	var departureStation, arrivalStation, criteria string
 
 	fmt.Print("Type the station of departure and press enter: ")
@@ -156,4 +158,3 @@ func readJson(s string) []byte {
 		log.Fatal("invalid json!")
 	}
 	return jsonData
-}
